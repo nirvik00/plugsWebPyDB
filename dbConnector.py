@@ -32,8 +32,8 @@ def readEdgeFile(filename):
 
 def writeNodesToDB(node_li):
     #client=MongoClient('mongodb://localhost:27017')
-    client=MongoClient('mongodb://nirvik:Nirvik01@ds347665.mlab.com:47665/plugsweb')
-    db=client.plugsweb
+    client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
+    db=client['plugs-prod']
     for i in node_li:
         nodes=db.nodes
         node_data={
@@ -50,8 +50,8 @@ def writeNodesToDB(node_li):
 
 def writeEdgesToDB(edge_li):
     #client=MongoClient('mongodb://localhost:27017')
-    client=MongoClient('mongodb://nirvik:Nirvik01@ds347665.mlab.com:47665/plugsweb')
-    db=client.plugsweb
+    client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
+    db=client['plugs-prod']
     for i in edge_li:
         edges=db.edges
         edge_data={
