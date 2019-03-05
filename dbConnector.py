@@ -31,40 +31,42 @@ def readEdgeFile(filename):
 
 
 def writeNodesToDB(node_li):
-    #client=MongoClient('mongodb://localhost:27017')
-    client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
-    db=client['plugs-prod']
+    client=MongoClient('mongodb://localhost:27017')
+    db=client['plugs-dev']
+    #client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
+    #db=client['plugs-prod']
     for i in node_li:
-        nodes=db.nodes
+        ns_elements=db.ns_elements
         node_data={
-            'type':'node',
+            'element_type':'node',
             'nsId':i[0],
-            'x':i[1],
-            'y':i[2],
-            'z':i[3]
+            'x':round(float(i[1])/1000,2),
+            'y':round(float(i[2])/1000,2),
+            'z':round(float(i[3])/1000,2)
             }
-        result=nodes.insert_one(node_data)
+        result=ns_elements.insert_one(node_data)
         #print('One post: {0}'.format(result.inserted_id))
 
 
 
 def writeEdgesToDB(edge_li):
-    #client=MongoClient('mongodb://localhost:27017')
-    client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
-    db=client['plugs-prod']
+    client=MongoClient('mongodb://localhost:27017')
+    db=client['plugs-dev']
+    #client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
+    #db=client['plugs-prod']
     for i in edge_li:
-        edges=db.edges
+        ns_elements=db.ns_elements
         edge_data={
-            'type':'edge',
+            'element_type':'edge',
             'nsId':i[0],
-            'x0':i[1],
-            'y0':i[2],
-            'z0':i[3],
-            'x1':i[4],
-            'y1':i[5],
-            'z1':i[6]
+            'x0':round(float(i[1])/1000,2),
+            'y0':round(float(i[2])/1000,2),
+            'z0':round(float(i[3])/1000,2),
+            'x1':round(float(i[4])/1000,2),
+            'y1':round(float(i[5])/1000,2),
+            'z1':round(float(i[6])/1000,2)
             }
-        result=edges.insert_one(edge_data)
+        result=ns_elements.insert_one(edge_data)
         #print('One post: {0}'.format(result.inserted_id))        
 
 NODE_LI=readNodeFile("nodes.dat")
