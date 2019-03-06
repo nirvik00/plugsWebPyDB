@@ -73,11 +73,54 @@ def writeEdgesToDB(edge_li):
         result=ns_elements.insert_one(edge_data)
         #print('One post: {0}'.format(result.inserted_id))        
 
+def writeParksToDB():
+    client=MongoClient('mongodb://localhost:27017')
+    db=client['plugs-dev']
+    #client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
+    #db=client['plugs-prod']
+    f=open("parks.dat","r")
+    area=None
+    cen=None
+    park_li=[]
+    for line in f:
+        data=line.split("\n")[0]
+        park_li.append(data)
+    for i in park_li:
+        ns_elements=db.ns_elements
+        park_data={
+            'element_type':'park',            
+            'pts':i
+        }
+        result=ns_elements.insert_one(park_data)
+    
+
+def writeBldgToDB():
+    client=MongoClient('mongodb://localhost:27017')
+    db=client['plugs-dev']
+    #client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
+    #db=client['plugs-prod']
+    f=open("bldg.dat","r")
+    bldg_li=[]
+    for line in f:
+        data=line.split("\n")[0]
+        bldg_li.append(data)
+    for i in bldg_li:
+        ns_elements=db.ns_elements
+        bldg_data={
+            'element_type':'bldg',
+            'pts':i
+        }
+        result=ns_elements.insert_one(bldg_data)
+
+        
 NODE_LI=readNodeFile("nodes.dat")
 EDGE_LI=readEdgeFile("edges.dat")
 writeNodesToDB(NODE_LI)
 writeEdgesToDB(EDGE_LI)
 
+        
+writeParksToDB()
+writeBldgToDB()
 
 print("done")
 

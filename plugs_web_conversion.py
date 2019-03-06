@@ -101,6 +101,53 @@ def writeEdgeToCsv(edge_li, filename):
     f.close()
 
 
+def writeParksToCsv(filename):
+    x=rs.ObjectsByLayer("ns_parks")
+    park_li=[]
+    k=0
+    for i in x:
+        pts=rs.CurvePoints(i)
+        area=rs.CurveArea(i)[0]/10000
+        print(area)
+        c=rs.CurveAreaCentroid(i)[0]
+        s=str(round(area,2))+";"+str(round(c[0]/1000,2))+","+str(round(c[1]/1000,2))+","+str(round(c[2]/1000,2))+"\n"
+        for j in pts:
+            s+=str(round(j[0]/1000,2))+","+str(round(j[1]/1000,2))+","+str(round(j[2]/1000,2))+";"
+        s+="\n"
+        park_li.append(s)
+        k+=1
+    f=open(filename,"w")
+    for i in park_li:
+        f.write(i)
+    f.close()
+
+def writeBldgToCsv(filename):
+    x=rs.ObjectsByLayer("ns_existing_houses")
+    bldg_li=[]
+    k=0
+    for i in x:
+        try:
+            pts=rs.CurvePoints(i)
+            area=rs.CurveArea(i)[0]/10000
+            c=rs.CurveAreaCentroid(i)[0]
+            s=str(round(area,2))+";"+str(round(c[0]/1000,2))+","+str(round(c[1]/1000,2))+","+str(round(c[2]/1000,2))+"\n"
+            for j in pts:
+                s+=str(round(j[0]/1000,2))+","+str(round(j[1]/1000,2))+","+str(round(j[2]/1000,2))+";"
+            s+="\n"
+            bldg_li.append(s)
+        except:
+            pass
+        k+=1
+    print("length of building : ",len(bldg_li))
+    f=open(filename,"w")
+    for i in bldg_li:
+        f.write(i)
+    f.close()
+    
+    
+    
+
+
 def moveObject(name):
     obj=rs.ObjectsByLayer(name)
     b=rs.ObjectsByLayer("ns_bounding_box")[0]
@@ -110,9 +157,12 @@ def moveObject(name):
     for i in obj:
         rs.MoveObject(i,d)
     
-#moveObject("kyojimas")
-GRAPH=setCirculationGraph()
-NODE_LI=GRAPH[0]
-EDGE_LI=GRAPH[1]
-writeNodeToCsv(NODE_LI,"nodes.dat")
-writeEdgeToCsv(EDGE_LI,"edges.dat")
+    
+###moveObject("kyojimas")#not required for now
+#GRAPH=setCirculationGraph()#done
+#NODE_LI=GRAPH[0]#done
+#EDGE_LI=GRAPH[1]#done
+#writeNodeToCsv(NODE_LI,"nodes.dat")#done
+#writeEdgeToCsv(EDGE_LI,"edges.dat")#done
+writeParksToCsv("parks.dat")
+writeBldgToCsv("bldg.dat")
