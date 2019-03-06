@@ -33,10 +33,15 @@ def readEdgeFile(filename):
 
 
 def writeNodesToDB(node_li):
-    client=MongoClient('mongodb://localhost:27017')
-    db=client['plugs-dev']
-    #client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
-    #db=client['plugs-prod']
+    client, db=None, None
+    if(stage=="dev"):
+        client=MongoClient('mongodb://localhost:27017')
+        db=client['plugs-dev']
+    elif(stage=="prod"):
+        client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
+        db=client['plugs-prod']
+    else:
+        pass
     for i in node_li:
         ns_elements=db.ns_elements
         node_data={
@@ -53,10 +58,15 @@ def writeNodesToDB(node_li):
 
 
 def writeEdgesToDB(edge_li):
-    client=MongoClient('mongodb://localhost:27017')
-    db=client['plugs-dev']
-    #client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
-    #db=client['plugs-prod']
+    client, db=None, None
+    if(stage=="dev"):
+        client=MongoClient('mongodb://localhost:27017')
+        db=client['plugs-dev']
+    elif(stage=="prod"):
+        client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
+        db=client['plugs-prod']
+    else:
+        pass
     for i in edge_li:
         ns_elements=db.ns_elements
         edge_data={
@@ -74,51 +84,93 @@ def writeEdgesToDB(edge_li):
         #print('One post: {0}'.format(result.inserted_id))        
 
 def writeParksToDB():
-    client=MongoClient('mongodb://localhost:27017')
-    db=client['plugs-dev']
-    #client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
-    #db=client['plugs-prod']
+    if(stage=="dev"):
+        client=MongoClient('mongodb://localhost:27017')
+        db=client['plugs-dev']
+    elif(stage=="prod"):
+        client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
+        db=client['plugs-prod']
+    else:
+        pass
     f=open("parks.dat","r")
-    area=None
-    cen=None
-    park_li=[]
+    area_li=[]
+    cen_li=[]
+    pt_li=[]
     for line in f:
         data=line.split("\n")[0]
-        park_li.append(data)
-    for i in park_li:
+        li=data.split(";")[0]
+        area=li.split(",")[0]
+        area_li.append(area)            
+        x=li.split(",")[1]
+        y=li.split(",")[2]
+        z=li.split(",")[3]        
+        cen_li.append([x,y,z])
+        #print(area, [x,y,z])
+        pts=data.split(";")
+        tmp_pts=[]
+        for i in range(1, len(pts)):
+            tmp_pts.append(pts[i])
+        pt_li.append(tmp_pts)
+    k=0
+    for i in pt_li:
         ns_elements=db.ns_elements
         park_data={
-            'element_type':'park',            
+            'element_type':'park',
+            'area':area_li[k],
+            'center':cen_li[k],
             'pts':i
         }
         result=ns_elements.insert_one(park_data)
-    
+        k+=1
 
 def writeBldgToDB():
-    client=MongoClient('mongodb://localhost:27017')
-    db=client['plugs-dev']
-    #client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
-    #db=client['plugs-prod']
+    client, db=None, None
+    if(stage=="dev"):
+        client=MongoClient('mongodb://localhost:27017')
+        db=client['plugs-dev']
+    elif(stage=="prod"):
+        client=MongoClient('mongodb://NS:plugs01@ds151078.mlab.com:51078/plugs-prod')
+        db=client['plugs-prod']
+    else:
+        pass
     f=open("bldg.dat","r")
-    bldg_li=[]
+    area_li=[]
+    cen_li=[]    
+    pt_li=[]
     for line in f:
         data=line.split("\n")[0]
-        bldg_li.append(data)
-    for i in bldg_li:
+        li=data.split(";")[0]
+        area=li.split(",")[0]
+        area_li.append(area)
+        x=li.split(",")[1]
+        y=li.split(",")[2]
+        z=li.split(",")[3]        
+        cen_li.append([x,y,z])
+        pts=data.split(";")
+        tmp_pts=[]
+        for i in range(1,len(pts)-1):            
+            tmp_pts.append(pts[i])
+        pt_li.append(tmp_pts)
+    k=0
+    for i in pt_li:
         ns_elements=db.ns_elements
         bldg_data={
             'element_type':'bldg',
+            'area':area_li[k],
+            'cen':cen_li[k],
             'pts':i
         }
         result=ns_elements.insert_one(bldg_data)
+        k+=1
 
-        
+
+#stage="dev"
+stage="prod"
+
 NODE_LI=readNodeFile("nodes.dat")
 EDGE_LI=readEdgeFile("edges.dat")
 writeNodesToDB(NODE_LI)
 writeEdgesToDB(EDGE_LI)
-
-        
 writeParksToDB()
 writeBldgToDB()
 

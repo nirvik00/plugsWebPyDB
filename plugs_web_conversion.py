@@ -103,14 +103,16 @@ def writeEdgeToCsv(edge_li, filename):
 
 def writeParksToCsv(filename):
     x=rs.ObjectsByLayer("ns_parks")
+    Pt_li=[]
     park_li=[]
     k=0
     for i in x:
         pts=rs.CurvePoints(i)
+        Pt_li.append(pts)
         area=rs.CurveArea(i)[0]/10000
         print(area)
         c=rs.CurveAreaCentroid(i)[0]
-        s=str(round(area,2))+";"+str(round(c[0]/1000,2))+","+str(round(c[1]/1000,2))+","+str(round(c[2]/1000,2))+"\n"
+        s=str(round(area,2))+","+str(round(c[0]/1000,2))+","+str(round(c[1]/1000,2))+","+str(round(c[2]/1000,2))+";"
         for j in pts:
             s+=str(round(j[0]/1000,2))+","+str(round(j[1]/1000,2))+","+str(round(j[2]/1000,2))+";"
         s+="\n"
@@ -120,6 +122,17 @@ def writeParksToCsv(filename):
     for i in park_li:
         f.write(i)
     f.close()
+    
+    
+    for pts in Pt_li:
+        p=[]
+        k=0
+        for j in pts:
+            x,y,z=j[0],j[1],1000
+            p.append([x,y,z])
+            rs.AddTextDot(k,[x,y,z])
+            k+=1
+        rs.AddPolyline(p)
 
 def writeBldgToCsv(filename):
     x=rs.ObjectsByLayer("ns_existing_houses")
@@ -130,7 +143,7 @@ def writeBldgToCsv(filename):
             pts=rs.CurvePoints(i)
             area=rs.CurveArea(i)[0]/10000
             c=rs.CurveAreaCentroid(i)[0]
-            s=str(round(area,2))+";"+str(round(c[0]/1000,2))+","+str(round(c[1]/1000,2))+","+str(round(c[2]/1000,2))+"\n"
+            s=str(round(area,2))+","+str(round(c[0]/1000,2))+","+str(round(c[1]/1000,2))+","+str(round(c[2]/1000,2))+";"
             for j in pts:
                 s+=str(round(j[0]/1000,2))+","+str(round(j[1]/1000,2))+","+str(round(j[2]/1000,2))+";"
             s+="\n"
@@ -165,4 +178,4 @@ def moveObject(name):
 #writeNodeToCsv(NODE_LI,"nodes.dat")#done
 #writeEdgeToCsv(EDGE_LI,"edges.dat")#done
 writeParksToCsv("parks.dat")
-writeBldgToCsv("bldg.dat")
+#writeBldgToCsv("bldg.dat")
