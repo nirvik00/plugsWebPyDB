@@ -172,10 +172,10 @@ def moveObject(name):
     
     
 ###moveObject("kyojimas")#not required for now
-#GRAPH=setCirculationGraph()#done
-#NODE_LI=GRAPH[0]#done
-#EDGE_LI=GRAPH[1]#done
-#writeNodeToCsv(NODE_LI,"nodes.dat")#done
-#writeEdgeToCsv(EDGE_LI,"edges.dat")#done
+GRAPH=setCirculationGraph()#done
+NODE_LI=GRAPH[0]#done
+EDGE_LI=GRAPH[1]#done
+writeNodeToCsv(NODE_LI,"nodes.dat")#done
+writeEdgeToCsv(EDGE_LI,"edges.dat")#done
 writeParksToCsv("parks.dat")
-#writeBldgToCsv("bldg.dat")
+writeBldgToCsv("bldg.dat")
