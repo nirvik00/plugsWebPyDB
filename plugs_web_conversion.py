@@ -158,7 +158,29 @@ def writeBldgToCsv(filename):
     f.close()
     
     
-    
+
+def writeSitesToCsv(filename):
+    x=rs.ObjectsByLayer("ns_sites")
+    site_li=[]
+    k=0
+    for i in x:
+        try:
+            pts=rs.CurvePoints(i)
+            area=rs.CurveArea(i)[0]/10000
+            c=rs.CurveAreaCentroid(i)[0]
+            s=str(round(area,2))+","+str(round(c[0]/1000,2))+","+str(round(c[1]/1000,2))+","+str(round(c[2]/1000,2))+";"
+            for j in pts:
+                s+=str(round(j[0]/1000,2))+","+str(round(j[1]/1000,2))+","+str(round(j[2]/1000,2))+";"
+            s+="\n"
+            site_li.append(s)
+        except:
+            pass
+        k+=1
+    print("length of sites : ",len(site_li))
+    f=open(filename,"w")
+    for i in site_li:
+        f.write(i)
+    f.close()
 
 
 def moveObject(name):
@@ -179,3 +201,4 @@ writeNodeToCsv(NODE_LI,"nodes.dat")#done
 writeEdgeToCsv(EDGE_LI,"edges.dat")#done
 writeParksToCsv("parks.dat")
 writeBldgToCsv("bldg.dat")
+writeSitesToCsv("site.dat")
