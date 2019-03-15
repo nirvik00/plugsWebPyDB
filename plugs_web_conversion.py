@@ -75,12 +75,6 @@ def setCirculationGraph():
                 break
         if(sum0>0 and sum1>0):
             edge_li.append(Edge(node0,node1,k,"green"))
-    
-    for i in edge_li:
-        p=i.node0.pt
-        q=i.node1.pt
-        L=rs.AddLine(p,q)
-        rs.MoveObject(L,[0,0,1000])
         
     return [node_li,edge_li]
 
@@ -123,16 +117,6 @@ def writeParksToCsv(filename):
         f.write(i)
     f.close()
     
-    
-    for pts in Pt_li:
-        p=[]
-        k=0
-        for j in pts:
-            x,y,z=j[0],j[1],1000
-            p.append([x,y,z])
-            rs.AddTextDot(k,[x,y,z])
-            k+=1
-        rs.AddPolyline(p)
 
 def writeBldgToCsv(filename):
     x=rs.ObjectsByLayer("ns_existing_houses")
@@ -166,8 +150,9 @@ def writeSitesToCsv(filename):
     for i in x:
         try:
             pts=rs.CurvePoints(i)
-            area=rs.CurveArea(i)[0]/10000
+            area=rs.CurveArea(i)[0]/1000000
             c=rs.CurveAreaCentroid(i)[0]
+            rs.AddTextDot(k,c)
             s=str(round(area,2))+","+str(round(c[0]/1000,2))+","+str(round(c[1]/1000,2))+","+str(round(c[2]/1000,2))+";"
             for j in pts:
                 s+=str(round(j[0]/1000,2))+","+str(round(j[1]/1000,2))+","+str(round(j[2]/1000,2))+";"
@@ -181,6 +166,7 @@ def writeSitesToCsv(filename):
     for i in site_li:
         f.write(i)
     f.close()
+
 
 
 def moveObject(name):

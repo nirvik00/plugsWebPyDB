@@ -208,6 +208,7 @@ def writeSiteToDB():
 
 
 
+
 #stage="dev"
 stage="prod"
 
@@ -219,7 +220,7 @@ writeParksToDB()
 writeBldgToDB()
 writeSiteToDB()
 
-print("done")
+print("done: %s "%(stage))
 
 
 
