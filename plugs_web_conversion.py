@@ -150,7 +150,7 @@ def writeSitesToCsv(filename):
     for i in x:
         try:
             pts=rs.CurvePoints(i)
-            area=rs.CurveArea(i)[0]/1000000
+            area=rs.CurveArea(i)[0]/10000
             c=rs.CurveAreaCentroid(i)[0]
             rs.AddTextDot(k,c)
             s=str(round(area,2))+","+str(round(c[0]/1000,2))+","+str(round(c[1]/1000,2))+","+str(round(c[2]/1000,2))+";"
@@ -172,7 +172,7 @@ def writeSitesToCsv(filename):
 def moveObject(name):
     obj=rs.ObjectsByLayer(name)
     b=rs.ObjectsByLayer("ns_bounding_box")[0]
-    
+     
     c=rs.CurveAreaCentroid(b)[0]
     d=[-c[0],-c[1],-c[2]]
     for i in obj:
@@ -188,3 +188,4 @@ writeEdgeToCsv(EDGE_LI,"edges.dat")#done
 writeParksToCsv("parks.dat")
 writeBldgToCsv("bldg.dat")
 writeSitesToCsv("site.dat")
+
